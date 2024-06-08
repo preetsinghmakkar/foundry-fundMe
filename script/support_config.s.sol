@@ -6,7 +6,7 @@ import {MockV3Aggregator} from "../test/mocks/MockV3Aggregator.sol";
 import {Script} from "forge-std/Script.sol";
 
 contract SupportConfig is Script {
-    //Declaring Variables for Mock
+    // Declaring Variables for Mock
     uint8 public constant DECIMALS = 8;
     int256 public constant INITIAL_PRICE = 2000e8;
 
@@ -14,7 +14,7 @@ contract SupportConfig is Script {
         address priceFeed;
     }
 
-    //state Variable
+    // State Variable
     NetworkConfig public activeNetworkConfig;
 
     constructor() {
@@ -28,9 +28,9 @@ contract SupportConfig is Script {
     function getSepoliaEthConfig()
         public
         pure
-        returns (NetworkConfig memory sepoloaNetworkConfig)
+        returns (NetworkConfig memory sepoliaNetworkConfig)
     {
-        sepoloaNetworkConfig = NetworkConfig({
+        sepoliaNetworkConfig = NetworkConfig({
             priceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306
         });
     }
@@ -39,19 +39,20 @@ contract SupportConfig is Script {
         public
         returns (NetworkConfig memory anvilNetworkConfig)
     {
-        //Check that already network should not exist
+        // Check if network config already exists
         if (activeNetworkConfig.priceFeed != address(0)) {
             return activeNetworkConfig;
         }
 
-        //Deploy mock on local chain
-        vm.startBroadcast();
+        // Deploy mock on local chain
         MockV3Aggregator mockPriceFeed = new MockV3Aggregator(
             DECIMALS,
             INITIAL_PRICE
         );
-        vm.stopBroadcast();
+        activeNetworkConfig = NetworkConfig({
+            priceFeed: address(mockPriceFeed)
+        });
 
-        anvilNetworkConfig = NetworkConfig({priceFeed: address(mockPriceFeed)});
+        return activeNetworkConfig;
     }
 }

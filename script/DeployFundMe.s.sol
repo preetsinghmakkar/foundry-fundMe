@@ -7,14 +7,14 @@ import {SupportConfig} from "./support_config.s.sol";
 
 contract DeployFundMe is Script {
     function deployFundMe() public returns (FundMe, SupportConfig) {
-        SupportConfig support_config = new SupportConfig(); // This comes with our mocks!
-        address priceFeed = support_config.activeNetworkConfig();
+        // Deploy SupportConfig first
+        SupportConfig supportConfig = new SupportConfig();
+        // No need to fetch price feed address here, it's already set during deployment
 
-        vm.startBroadcast();
-        FundMe fundMe = new FundMe(priceFeed);
-        vm.stopBroadcast();
+        // Deploy FundMe using the priceFeed address from SupportConfig
+        FundMe fundMe = new FundMe(supportConfig.activeNetworkConfig());
 
-        return (fundMe, support_config);
+        return (fundMe, supportConfig);
     }
 
     function run() external returns (FundMe, SupportConfig) {

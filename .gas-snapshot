@@ -1,0 +1,4 @@
+FundMeTest:testFundFailsWithoutEther() (gas: 23000)
+FundMeTest:testFundandRetrieveFunder() (gas: 100094)
+FundMeTest:testMinimumUSD() (gas: 8433)
+FundMeTest:testPriceFeedSetCorrectly() (gas: 21237)
